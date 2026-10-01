@@ -152,14 +152,14 @@ CREATE INDEX idx_alerts_ts ON alerts (ts);
 
 | type | направление | назначение |
 |---|---|---|
-| `register` | agent → server | регистрация устройства |
-| `register_ack` | server → agent | поля `status` (ok/error), `reason` |
-| `metrics` | agent → server | пакет метрик |
-| `heartbeat` / `heartbeat_ack` | двусторонний | проверка связи |
-| `command` | server → agent | команда агенту |
-| `command_result` | agent → server | результат (`status`, `reason`) |
-| `alert` | server → operator | тревога |
-| `query` / `query_result` | operator ↔ server | запрос данных |
+| `Agent_Register` | agent → server | регистрация устройства |
+| `Register_ack` | server → agent | поля `status` (ok/error), `reason` |
+| `Metrics` | agent → server | пакет метрик |
+| `Heartbeat` / `Heartbeat_ack` | двусторонний | проверка связи |
+| `Command` | server → agent | команда агенту |
+| `Command_result` | agent → server | результат (`status`, `reason`) |
+| `Alert` | server → operator | тревога |
+| `Query` / `Query_result` | двусторонний | запрос данных |
 
 Пример пакета метрик:
 
