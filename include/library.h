@@ -14,6 +14,7 @@
 typedef enum {
     OK = 0,
     ERR = -1,
+    BUF = 1024,
 } status_t;
 
 #endif
