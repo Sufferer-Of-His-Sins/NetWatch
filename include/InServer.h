@@ -1,5 +1,5 @@
-#ifndef SERVER_H
-#define SERVER_H
+#ifndef INSERVER_H
+#define INSERVER_H
 
 #include "library.h"
 
