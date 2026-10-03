@@ -1,5 +1,5 @@
-#ifndef AGENT_H
-#define AGENT_H
+#ifndef INAGENT_H
+#define INAGENT_H
 
 #include "library.h"
 

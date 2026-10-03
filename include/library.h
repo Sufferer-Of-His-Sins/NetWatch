@@ -9,6 +9,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <postgresql/libpq-fe.h>
+#include <jansson.h>
 
 
 typedef enum {
