@@ -157,6 +157,7 @@ CREATE INDEX idx_alerts_ts ON alerts (ts);
 | `Metrics` | agent → server | пакет метрик |
 | `Heartbeat` / `Heartbeat_ack` | двусторонний | проверка связи |
 | `Command` | server → agent | команда агенту |
+| `Command_request` | operator → server | команда оператору |
 | `Command_result` | agent → server | результат (`status`, `reason`) |
 | `Alert` | server → operator | тревога |
 | `Query` / `Query_result` | двусторонний | запрос данных |
