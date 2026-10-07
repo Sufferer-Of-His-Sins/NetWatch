@@ -5,6 +5,7 @@ static int response_err(int fd){
     
     json_object_set_new(obj,"type", json_string("Register_ask"));
     json_object_set_new(obj, "status", json_string("ERROR"));
+    json_object_set_new(obj, "reason", json_string("Server is full"));
 
     char *str = json_dumps(obj, JSON_COMPACT);
     json_decref(obj);
@@ -21,7 +22,8 @@ static int response_ok(int fd){
 
     json_object_set_new(obj, "type", json_string("Register_ack"));
     json_object_set_new(obj, "status", json_string("SUCCESS"));
-
+    json_object_set_new(obj, "reason", json_string("Registration successful"));
+    
     char *str = json_dumps(obj, JSON_COMPACT);
     json_decref(obj);
     
