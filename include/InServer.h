@@ -14,11 +14,12 @@ typedef struct{
 
 /*Основные функции сервера*/
 int Server(void);
-int Register_ack(const char *buffer, MAX_EVENTS_t *ev, int fd);
-int Heartbeat_ack(int socket_fd);
+int Register_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd);
+int Heartbeat_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd);
 int Command(const char *buffer, MAX_EVENTS_t *ev, int operator_fd);
-int Alert(int socket_fd);
-int Query_result(const char *buffer, MAX_EVENTS_t *ev, int fd);
+int Alert_send(int operator_fd, const char *device_id, const char *kind, json_t *details);
+int Alert_broadcast(MAX_EVENTS_t *ev, const char *device_id, const char *kind, json_t *details);
+int Query_result(const char *buffer, MAX_EVENTS_t *ev, int operator_fd);
 
 /*Дополнительные функции*/
 int add_connection(MAX_EVENTS_t *ev);

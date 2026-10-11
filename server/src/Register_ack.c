@@ -1,6 +1,6 @@
 #include "InServer.h"
 
-static int response_err(int fd){
+static int response_err(int agent_fd){
     json_t *obj = json_object();
     
     json_object_set_new(obj,"type", json_string("Register_ask"));
@@ -12,12 +12,12 @@ static int response_err(int fd){
     
     if(str == NULL){return ERR;}
     size_t len = strlen(str);
-    ssize_t sent = send(fd, str, len, 0);
+    ssize_t sent = send(agent_fd, str, len, 0);
     free(str);
 
     return (sent == (ssize_t)len) ? OK : ERR;
 }
-static int response_ok(int fd){
+static int response_ok(int agent_fd){
     json_t *obj = json_object();
 
     json_object_set_new(obj, "type", json_string("Register_ack"));
@@ -29,14 +29,14 @@ static int response_ok(int fd){
     
     if(str == NULL){return ERR;}
     size_t len = strlen(str);
-    ssize_t sent = send(fd, str, len, 0);
+    ssize_t sent = send(agent_fd, str, len, 0);
     free(str);
 
     return (sent == (ssize_t)len) ? OK : ERR;
 }
 
 
-int Register_ack(const char *buffer, MAX_EVENTS_t *ev, int fd){
+int Register_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd){
     json_error_t error;
     json_t *root = json_loads(buffer, 0, &error);
     
@@ -52,7 +52,7 @@ int Register_ack(const char *buffer, MAX_EVENTS_t *ev, int fd){
         if(UP_amount_size(ev) == ERR){
             result = ERR;
         } else {
-            result = response_ok(fd);
+            result = response_ok(agent_fd);
         }
     }
 
