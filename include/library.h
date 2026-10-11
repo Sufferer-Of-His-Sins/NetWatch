@@ -1,6 +1,7 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include <time.h>
 #include <stdio.h>
 #include <errno.h>
 #include <unistd.h>
