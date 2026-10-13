@@ -3,4 +3,5 @@
 
 #include "library.h"
 
+int Operator_m(void);
 #endif
