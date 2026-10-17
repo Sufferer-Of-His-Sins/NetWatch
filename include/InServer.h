@@ -3,7 +3,7 @@
 
 #include "library.h"
 
-#define MIN_SIZE 8
+
 
 typedef struct{
     int amount_size;

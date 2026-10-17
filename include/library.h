@@ -14,7 +14,8 @@
 #include <sys/socket.h>
 #include <postgresql/libpq-fe.h>
 
-
+#define MIN_SIZE 8
+#define BUFFER 1024
 typedef enum {
     OK = 0,
     ERR = -1,
