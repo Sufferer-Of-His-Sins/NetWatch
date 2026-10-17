@@ -23,7 +23,7 @@ static void print_footer(void){
     printf("╰──────────────────┴──────────┴──────────┴────────┴─────────────────────────╯\n\n");
 }
 static void print_device(const char *id, const char *type, const char *firmware, int online, const char *last_seen){
-    printf("│ %-16s │ %-8s │ %-8s │ %-6s │ %-23s │\n",
+    printf("│ %-16s │ %-8s │ %-8s │ %-7s │ %-23s │\n",
            id ? id : "?",
            type ? type : "?",
            firmware ? firmware : "?",
@@ -33,14 +33,14 @@ static void print_device(const char *id, const char *type, const char *firmware,
 
 /*отправка запроса на получения списка*/
 int output_packets(int server_sock){
-    json_t *ack = json_object();
-    if(!ack) {return ERR;}
+    json_t *req = json_object();
+    if(!req) {return ERR;}
 
-    json_object_set_new(ack, "type", json_string("query"));
-    json_object_set_new(ack, "query", json_string("list_devices"));
+    json_object_set_new(req, "type", json_string("query"));
+    json_object_set_new(req, "query", json_string("list_devices"));
 
-    char *str = json_dumps(ack, JSON_COMPACT);
-    json_decref(ack);
+    char *str = json_dumps(req, JSON_COMPACT);
+    json_decref(req);
 
     if(!str) {return ERR;}
     int result = frame(server_sock, str, strlen(str));
