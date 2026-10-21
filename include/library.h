@@ -16,6 +16,9 @@
 
 #define MIN_SIZE 8
 #define BUFFER 1024
+#define HISTORY_LIMIT 100
+#define MAX_FRAME_HISTORY (1024 * 1024)
+
 typedef enum {
     OK = 0,
     ERR = -1,
