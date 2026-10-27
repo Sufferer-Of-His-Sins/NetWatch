@@ -2,7 +2,9 @@
 #define LIBRARY_H
 
 #include <time.h>
+#include <math.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
