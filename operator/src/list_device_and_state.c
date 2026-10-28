@@ -36,7 +36,7 @@ int output_packets(int server_sock){
     json_t *req = json_object();
     if(!req) {return ERR;}
 
-    json_object_set_new(req, "type", json_string("query"));
+    json_object_set_new(req, "type", json_string("Query"));
     json_object_set_new(req, "query", json_string("list_devices"));
 
     char *str = json_dumps(req, JSON_COMPACT);
@@ -67,9 +67,9 @@ int input_packets(const char *buffer){
         return ERR;
     }
     
-    json_t *devices = json_object_get(root, "devices");
+    json_t *devices = json_object_get(root, "data");
     if (!json_is_array(devices)) {
-        syslog(LOG_ERR, "Поле devices отсутствует или не массив");
+        syslog(LOG_ERR, "Поле data отсутствует или не массив");
         json_decref(root);
         return ERR;
     }
@@ -82,8 +82,15 @@ int input_packets(const char *buffer){
         const char *device_id = json_string_value(json_object_get(dev, "device_id"));
         const char *dev_type  = json_string_value(json_object_get(dev, "type"));
         const char *firmware  = json_string_value(json_object_get(dev, "firmware"));
-        const char *last_seen = json_string_value(json_object_get(dev, "last_seen"));
 
+        char last_seen[32] = "-";
+        json_t *j_last = json_object_get(dev, "last_seen");
+        if (json_is_integer(j_last)) {
+            time_t t = (time_t)json_integer_value(j_last);
+            strftime(last_seen, sizeof(last_seen), "%Y-%m-%d %H:%M:%S", localtime(&t));
+        } else if (json_is_string(j_last)) {
+            snprintf(last_seen, sizeof(last_seen), "%s", json_string_value(j_last));
+        }
         int online = json_is_true(json_object_get(dev, "online"));
 
         print_device(device_id, dev_type, firmware, online ,last_seen);
