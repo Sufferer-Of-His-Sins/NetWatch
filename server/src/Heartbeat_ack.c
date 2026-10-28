@@ -33,13 +33,20 @@ int Heartbeat_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd){
     const char *device_id = json_string_value(dev_id);
 
     json_t *ack = json_object();
-    if(!ack) {return ERR;}
+    if(!ack) {
+        json_decref(root);
+        return ERR;
+    }
 
     json_object_set_new(ack, "type", json_string("Heartbeat_ack"));
-    json_object_set_new(ack, "device_id", json_string("ok"));
+    json_object_set_new(ack, "device_id", json_string(device_id));
+    json_object_set_new(ack, "status", json_string("ok"));
 
     char *str = json_dumps(ack, JSON_COMPACT);
-    if(!str) {return ERR;}
+    if(!str) {
+        json_decref(root);
+        return ERR;
+    }
 
     int result = frame(agent_fd, str, strlen(str));
     free(str);
