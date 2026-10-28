@@ -3,7 +3,6 @@
 
 #include "library.h"
 
-
 int output_packets(int server_sock);
 int input_packets(const char *buffer);
 int send_device_metrics(int server_socket, const char *device_id);

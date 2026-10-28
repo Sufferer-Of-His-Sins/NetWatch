@@ -19,7 +19,7 @@ static int send_query_result(int operator_fd, const char *query, const char *sta
     if(!obj){return ERR;}
 
     json_object_set_new(obj, "type", json_string("Query_result"));
-    json_object_set_new(obj, "query", json_string(query));
+    json_object_set_new(obj, "query", json_string(query ? query : ""));
     json_object_set_new(obj, "status", json_string(status));
     
     if(reason){json_object_set_new(obj, "reason", json_string(reason));}
@@ -39,7 +39,7 @@ static int log_alerts(int operator_fd){
     json_t *alerts = json_array();
     if(!alerts){return ERR;}
 
-    int result = send_query_result(operator_fd, "alerts(journal)", "ok", NULL, alerts);
+    int result = send_query_result(operator_fd, "alerts", "ok", NULL, alerts);
     json_decref(alerts);
     return result;
 }
@@ -81,7 +81,7 @@ static int list_devices(int operator_fd){
     if (!data) return ERR;
 
     json_t *dev = json_object();
-    json_object_set_new(dev, "device_id", json_string("sw-014"));
+    json_object_set_new(dev, "device_id", json_string("sw-01"));
     json_object_set_new(dev, "type", json_string("switch"));
     json_object_set_new(dev, "firmware", json_string("1.0.0"));
     json_object_set_new(dev, "online", json_true());
@@ -105,10 +105,10 @@ int Query_result(const char *buffer, MAX_EVENTS_t *ev, int operator_fd){
     }
     json_t *type = json_object_get(root, "type");
 
-    if(json_is_string(type) && strcmp(json_string_value(type), "Query") != 0){
+    if(!json_is_string(type) || strcmp(json_string_value(type), "Query") != 0){
         syslog(LOG_ERR, "Неверный тип сообщения: %s\n", json_string_value(type));
         json_decref(root);
-        send_query_result(operator_fd, "", "error", "Missing type", NULL);
+        send_query_result(operator_fd, "", "error", "Invalid type", NULL);
         return ERR;
     }
 
@@ -120,11 +120,12 @@ int Query_result(const char *buffer, MAX_EVENTS_t *ev, int operator_fd){
         return ERR;
     }
     
+    const char *q = json_string_value(query);
     int result = ERR;
     
-    if(strcmp(json_string_value(query), "list_device") == 0){
+    if(strcmp(json_string_value(query), "list_device") == 0 || strcmp(q, "list_device") == 0){
         result = list_devices(operator_fd);
-    } else if(strcmp(jsont_string_value(query), "device_details") == 0){
+    } else if(strcmp(json_string_value(query), "device_details") == 0){
         json_t *device  = json_object_get(root, "device_id");
         const char *device_ID = json_string_value(device) ? json_is_string(device) : NULL;
         result = device_details(operator_fd, device_ID);
