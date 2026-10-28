@@ -1,7 +1,7 @@
 #include "InOperator.h"
 
 static int form(json_t *root, json_t *type, json_t *dev_id, json_t *kind, json_t *ts, json_t *details){
-    if (!json_is_string(type) || strcmp(json_string_value(type), "alert") != 0) {
+    if (!json_is_string(type) || strcmp(json_string_value(type), "Alert") != 0) {
         syslog(LOG_ERR, "Alert: неожиданный type");
         return ERR;
     }

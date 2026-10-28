@@ -162,9 +162,9 @@ int Get_device_metrics(int server_socket, const char *device_id){
         return ERR;
     }
 
-    if(strcmp(json_string_value(status), "SUCCESS") != 0){
-        printf("Не удалось получить метрики: %s\n",
-               json_is_string(reason) ? json_string_value(reason) : "неизвестная ошибка");
+    const char *st = json_string_value(status);
+    if (strcmp(st, "SUCCESS") != 0 && strcmp(st, "ok") != 0) {
+        printf("Не удалось получить метрики: %s\n", json_is_string(reason) ? json_string_value(reason) : "неизвестная ошибка");
         json_decref(root);
         return ERR;
     }
