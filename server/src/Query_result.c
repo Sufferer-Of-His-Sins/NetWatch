@@ -123,7 +123,7 @@ int Query_result(const char *buffer, MAX_EVENTS_t *ev, int operator_fd){
     const char *q = json_string_value(query);
     int result = ERR;
     
-    if(strcmp(json_string_value(query), "list_device") == 0 || strcmp(q, "list_device") == 0){
+    if(strcmp(json_string_value(query), "list_devices") == 0 || strcmp(json_string_value(query), "list_device") == 0){
         result = list_devices(operator_fd);
     } else if(strcmp(json_string_value(query), "device_details") == 0){
         json_t *device  = json_object_get(root, "device_id");
