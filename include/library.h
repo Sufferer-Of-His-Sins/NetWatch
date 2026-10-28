@@ -8,12 +8,17 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <string.h>
+#include <signal.h>
+#include <stdint.h>
 #include <syslog.h>
 #include <jansson.h>
 #include <stdbool.h>
 #include <sys/epoll.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <sys/select.h>
+#include <netinet/in.h>
 #include <postgresql/libpq-fe.h>
 
 #define MIN_SIZE 8
