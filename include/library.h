@@ -43,6 +43,19 @@ typedef enum {
     BUF = 1024,
 } status_t;
 
+typedef struct{
+    int amount_size;
+    int amount_connections;
+    struct epoll_event *events;
+} MAX_EVENTS_t;
+
+typedef struct {
+    int id;
+    char state[8];
+    long long rx;
+    long long tx;
+} port_t;
+
 typedef struct {
     char device_id[64];
     char type[32];
@@ -62,26 +75,4 @@ typedef struct {
     int need_reboot;
 } agent_t;
 
-typedef struct {
-    int id;
-    char state[8];
-    long long rx;
-    long long tx;
-} port_t;
-
-typedef struct{
-    int amount_size;
-    int amount_connections;
-    struct epoll_event *events;
-} MAX_EVENTS_t;
-
-typedef struct {
-    int fd;
-    int is_agent;
-    char device_id[64];
-    time_t last_seen;
-    char *recv_buf;
-    size_t recv_len;
-    size_t recv_cap;
-} conn_t;
 #endif
