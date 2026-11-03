@@ -32,7 +32,10 @@
 #define DEFAULT_TYPE "switch"
 #define DEFAULT_FIRMWARE "1.0.0"
 #define MAX_PORTS 8
+#define MAX_CONNS 256
 #define HEARTBEAT_INTERVAL 5
+#define HEARTBEAT_TIMEOUT 30
+
 
 typedef enum {
     OK = 0,

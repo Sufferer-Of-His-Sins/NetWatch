@@ -47,5 +47,8 @@ int Alert_send(int operator_fd, const char *device_id, const char *kind, json_t 
 }
 
 int Alert_broadcast(MAX_EVENTS_t *ev, const char *device_id, const char *kind, json_t *details){
-    // тут не забыть потом доделать отправку всем операторам, кроме того, кто отправил
+    (void)ev;
+    (void)details;
+    syslog(LOG_INFO, "Alert_broadcast: %s %s\n", device_id, kind);
+    return OK;
 }

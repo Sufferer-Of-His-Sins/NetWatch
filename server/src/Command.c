@@ -31,10 +31,8 @@ static int reply_to_operator(int operator_fd, const char *status, const char *re
     free(str);
     return rc;
 }
-/*чуть позже надо будет сделать*/
-static int find_agent_fd(const char *device_id){
-    return ERR;
-}
+
+extern int find_agent_fd(const char *device_id);
 
 
 
