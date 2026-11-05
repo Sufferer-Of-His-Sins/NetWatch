@@ -17,7 +17,7 @@ OPERATOR_SRCS = operator/src/main.c operator/src/operator.c operator/src/frame.c
 .PHONY: all clean agent server operator test dirs
 
 all: dirs $(AGENT) $(SERVER) $(OPERATOR)
-
+ 
 dirs:
 	@mkdir -p $(BINDIR)
 
