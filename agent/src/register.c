@@ -39,7 +39,7 @@ int agent_register(agent_t *a) {
 
     json_object_set_new(obj, "type", json_string("Agent_Register"));
     json_object_set_new(obj, "device_id", json_string(a->device_id));
-    json_object_set_new(obj, "type", json_string(a->type));
+    json_object_set_new(obj, "device_type", json_string(a->type));
     json_object_set_new(obj, "firmware", json_string(a->firmware));
 
     char *str = json_dumps(obj, JSON_COMPACT);

@@ -36,7 +36,6 @@
 #define HEARTBEAT_INTERVAL 5
 #define HEARTBEAT_TIMEOUT 30
 
-
 typedef enum {
     OK = 0,
     ERR = -1,
@@ -49,6 +48,35 @@ typedef struct{
     struct epoll_event *events;
 } MAX_EVENTS_t;
 
+typedef struct {
+    int id;
+    char state[8];
+    long long rx;
+    long long tx;
+} port_t;
+typedef struct {
+    int fd;
+    int is_agent;
+    char device_id[64];
+    char type[32];
+    char firmware[32];
+    time_t last_seen;
+    int online;
+
+    double last_cpu;
+    double last_ram;
+    long long last_uptime;
+    json_t *last_ports;
+
+    char *recv_buf;
+    size_t recv_len;
+    size_t recv_cap;
+} conn_t;
+typedef struct {
+    int amount_size;
+    int amount_connections;
+    struct epoll_event *events;
+} MAX_EVENTS_t;
 typedef struct {
     int id;
     char state[8];
