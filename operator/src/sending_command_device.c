@@ -14,6 +14,23 @@ static int frame(int fd, const char *body, size_t body_len){
     }
     return OK;
 }
+static int read_all(int fd, void *buf, size_t len){
+    size_t got = 0;
+    while(got < len){
+        ssize_t n = read(fd, (char *)buf + got, len - got);
+        if(n == 0){
+            syslog(LOG_ERR, "Сервер закрыл соединение\n");
+            return ERR;
+        }
+        if(n < 0){
+            if(errno == EINTR) {continue;}
+            syslog(LOG_ERR, "Ошибка чтения: %s\n", strerror(errno));
+            return ERR;
+        }
+        got += n;
+    }
+    return OK;
+}
 static char *read_frame(int fd){
     uint32_t len;
     if(read_all(fd, &len, sizeof(len)) != OK) {return NULL;}
@@ -46,23 +63,6 @@ static int check_result(json_t *root, const char *command){
         return ERR;
     }
     printf("%s: %s\n", command, text);
-    return OK;
-}
-static int read_all(int fd, void *buf, size_t len){
-    size_t got = 0;
-    while(got < len){
-        ssize_t n = read(fd, (char *)buf + got, len - got);
-        if(n == 0){
-            syslog(LOG_ERR, "Сервер закрыл соединение\n");
-            return ERR;
-        }
-        if(n < 0){
-            if(errno == EINTR) {continue;}
-            syslog(LOG_ERR, "Ошибка чтения: %s\n", strerror(errno));
-            return ERR;
-        }
-        got += n;
-    }
     return OK;
 }
 static json_t *wait_command_result(int fd){

@@ -248,3 +248,30 @@ netwatch/
 ├── TASK.md
 └── README.md
 ```
+
+## 6. Как запустить?
+```
+# БД
+docker compose up -d
+
+# сервер
+export NETWATCH_DB_HOST=127.0.0.1
+export NETWATCH_DB_USER=netwatch
+export NETWATCH_DB_PASSWORD=netwatch
+export NETWATCH_DB_NAME=netwatch
+./bin/server &
+
+# агент
+./bin/agent -d sw-014 -i 5 &
+
+# агент на другом пк
+./bin/agent -h <ip сервера> -p 9000 -d sw-014 -i 5
+
+# оператор
+./bin/operator
+
+# оператор на другом пк
+export NETWATCH_HOST=<ip сервера>
+export NETWATCH_PORT=9000
+./bin/operator
+```

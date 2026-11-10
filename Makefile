@@ -7,7 +7,7 @@ AGENT    = $(BINDIR)/agent
 SERVER   = $(BINDIR)/server
 OPERATOR = $(BINDIR)/operator
 
-AGENT_SRCS = agent/src/main.c agent/src/agent.c agent/src/frame.c \
+AGENT_SRCS = agent/src/Agent_main.c agent/src/agent.c agent/src/frame.c \
              agent/src/register.c agent/src/metrics.c agent/src/heartbeat.c \
              agent/src/command.c
 
