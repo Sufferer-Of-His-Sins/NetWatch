@@ -1,23 +1,30 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -O2 -g -Iinclude
-LDFLAGS = -ljansson -lpq -lm
+CC       = gcc
+CFLAGS   = -Wall -Wextra -O2 -g -Iinclude -D_GNU_SOURCE
+LDFLAGS  = -ljansson -lpq -lm
 
-BINDIR = bin
-AGENT = $(BINDIR)/agent
-SERVER = $(BINDIR)/server
+BINDIR   = bin
+AGENT    = $(BINDIR)/agent
+SERVER   = $(BINDIR)/server
 OPERATOR = $(BINDIR)/operator
 
 AGENT_SRCS = agent/src/main.c agent/src/agent.c agent/src/frame.c \
-               agent/src/register.c agent/src/metrics.c agent/src/heartbeat.c \
-               agent/src/command.c
-SERVER_SRCS = server/src/main.c server/src/server.c server/src/frame.c \
-               server/src/handlers.c server/src/db.c
-OPERATOR_SRCS = operator/src/main.c operator/src/operator.c operator/src/frame.c
+             agent/src/register.c agent/src/metrics.c agent/src/heartbeat.c \
+             agent/src/command.c
 
-.PHONY: all clean agent server operator test dirs
+SERVER_SRCS = server/src/main.c server/src/Server_main.c \
+              server/src/Register_ack.c server/src/Heartbeat_ack.c \
+              server/src/Query_result.c server/src/Command.c server/src/Alert.c \
+              server/src/up_or_lower_amount_size.c server/src/db.c
+
+OPERATOR_SRCS = operator/src/main.c operator/src/operator_main.c \
+                operator/src/frame.c operator/src/list_device_and_state.c \
+                operator/src/device_detail.c operator/src/metrics_history.c \
+                operator/src/allert_journal.c operator/src/sending_command_device.c
+
+.PHONY: all clean dirs
 
 all: dirs $(AGENT) $(SERVER) $(OPERATOR)
- 
+
 dirs:
 	@mkdir -p $(BINDIR)
 
@@ -30,16 +37,5 @@ $(SERVER): $(SERVER_SRCS) include/library.h include/InServer.h
 $(OPERATOR): $(OPERATOR_SRCS) include/library.h include/InOperator.h
 	$(CC) $(CFLAGS) -o $@ $(OPERATOR_SRCS) $(LDFLAGS)
 
-agent: dirs $(AGENT)
-server: dirs $(SERVER)
-operator: dirs $(OPERATOR)
-
 clean:
 	rm -rf $(BINDIR)
-
-test:
-	@echo "Build assembled. Manually:"
-	@echo "  docker compose up -d"
-	@echo "  ./bin/server &"
-	@echo "  ./bin/agent -d sw-001 &"
-	@echo "  ./bin/operator"

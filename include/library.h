@@ -55,7 +55,24 @@ typedef struct {
     long long rx;
     long long tx;
 } port_t;
+typedef struct {
+    int fd;
+    int is_agent;
+    char device_id[64];
+    char type[32];
+    char firmware[32];
+    time_t last_seen;
+    int online;
 
+    double last_cpu;
+    double last_ram;
+    long long last_uptime;
+    json_t *last_ports;
+
+    char *recv_buf;
+    size_t recv_len;
+    size_t recv_cap;
+} conn_t;
 typedef struct {
     char device_id[64];
     char type[32];
