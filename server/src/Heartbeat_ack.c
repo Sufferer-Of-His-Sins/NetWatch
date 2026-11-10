@@ -2,7 +2,7 @@
 
 static int frame(int fd, const char *body, size_t body_len){
     uint32_t len = htonl(body_len);
-    if(write(fd, &len, sizeof(len)) != sizeof(len)){
+    if(write(fd, &len, sizeof(len)) != (ssize_t)sizeof(len)){
         syslog(LOG_ERR, "Ошибка записи длины кадра: %s\n", strerror(errno));
         return ERR;
     }
@@ -14,26 +14,27 @@ static int frame(int fd, const char *body, size_t body_len){
 }
 
 int Heartbeat_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd){
+    (void)ev;
     json_error_t error;
     json_t *root = json_loads(buffer, 0, &error);
-
     if(!root){
         syslog(LOG_ERR, "Ошибка парсинга строка %d: %s\n", error.line, error.text);
         return ERR;
     }
 
     json_t *type = json_object_get(root, "type");
-    if(json_is_string(type) && strcmp(json_string_value(type), "Heartbeat") != 0){
-        syslog(LOG_ERR, "Неверный тип сообщения: %s\n", json_string_value(type));
+    if(!json_is_string(type) || strcmp(json_string_value(type), "Heartbeat") != 0){
+        syslog(LOG_ERR, "Неверный тип сообщения: %s\n",
+               json_is_string(type) ? json_string_value(type) : "?");
         json_decref(root);
         return ERR;
     }
 
     json_t *dev_id = json_object_get(root, "device_id");
-    const char *device_id = json_string_value(dev_id);
+    const char *device_id = json_is_string(dev_id) ? json_string_value(dev_id) : "unknown";
 
     json_t *ack = json_object();
-    if(!ack) {
+    if(!ack){
         json_decref(root);
         return ERR;
     }
@@ -43,7 +44,8 @@ int Heartbeat_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd){
     json_object_set_new(ack, "status", json_string("ok"));
 
     char *str = json_dumps(ack, JSON_COMPACT);
-    if(!str) {
+    json_decref(ack);
+    if(!str){
         json_decref(root);
         return ERR;
     }
@@ -51,9 +53,11 @@ int Heartbeat_ack(const char *buffer, MAX_EVENTS_t *ev, int agent_fd){
     int result = frame(agent_fd, str, strlen(str));
     free(str);
 
-    if(result == OK){
+    if(result == OK)
         syslog(LOG_INFO, "Отправлено Heartbeat_ack для устройства: %s\n", device_id);
-    } else {
+    else
         syslog(LOG_ERR, "Ошибка отправки Heartbeat_ack для устройства: %s\n", device_id);
-    }
+
+    json_decref(root);
+    return result;
 }
